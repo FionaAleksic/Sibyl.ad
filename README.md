@@ -78,3 +78,7 @@ Der Build kompiliert und führt deterministische Tests zu LDAPS-Zwang, Konfigura
 - Kein Versprechen einer bestandenen Live-AD-Verbindung ohne echten Test.
 
 **Lizenz:** MIT.
+
+## Öffentliche Bereitstellung
+
+Das Repository ist öffentlich. Sobald ein **veröffentlichtes** GitHub-Pre-Release `v0.1.0-rc.1` mit ZIP-Asset existiert, können fremde Sibyl-Server dessen Paket ohne persönliche GitHub-Anmeldung direkt aus der GitHub-Releases-API beziehen. Der aktuelle `test`-Branch ist **kein** installierbares Release. Die Veröffentlichung wird nach erfolgreichem Build und erfolgreichen Tests durch die CI durchgeführt.
