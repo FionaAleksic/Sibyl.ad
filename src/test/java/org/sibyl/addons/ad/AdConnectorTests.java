@@ -45,7 +45,7 @@ public final class AdConnectorTests {
         rejects(() -> new AdSettings(valid.serverUrl(), valid.baseDn(), valid.bindDn(),
             1001, 5000, 10000), "Oversized page forbidden");
 
-        String ldap = AdEncoding.escapeFilter("a*(b)\\\u0000");
+        String ldap = AdEncoding.escapeFilter("a*(b)" + "\\" + (char) 0);
         ok("a\\2a\\28b\\29\\5c\\00".equals(ldap), "RFC4515 chars");
         ok("x\\c3\\a4".equals(AdEncoding.escapeFilter("xä")), "UTF-8 byte escaping");
         rejects(() -> AdEncoding.escapeFilter(null), "Null LDAP value forbidden");
