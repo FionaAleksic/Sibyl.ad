@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sibyl AD Connector (LDAPS)",
+  "description": "Read-only directory connector, credentials are supplied via server-side environment variables. No password in JSON.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "serverUrl": {
+      "type": "string",
+      "pattern": "^ldaps://[^/?#]+(?::[0-9]+)?$",
+      "description": "DNS name + optional port; a trusted TLS certificate is required."
+    },
+    "baseDn": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 1024,
+      "description": "OU/domain subtree to be queried, for example DC=example,DC=org."
+    },
+    "bindDn": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 1024,
+      "description": "Read-only AD service account LDAP distinguished name."
+    },
+    "credentialEnvironmentVariable": {
+      "type": "string",
+      "const": "SIBYL_AD_BIND_PASSWORD",
+      "default": "SIBYL_AD_BIND_PASSWORD"
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 1000,
+      "default": 250
+    },
+    "connectTimeoutMs": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 30000,
+      "default": 5000
+    },
+    "readTimeoutMs": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 60000,
+      "default": 10000
+    },
+    "enableWrites": {
+      "type": "boolean",
+      "const": false,
+      "default": false
+    }
+  },
+  "required": [
+    "serverUrl",
+    "baseDn",
+    "bindDn"
+  ]
+}
