@@ -46,5 +46,5 @@ with zipfile.ZipFile(path) as z:
 print("Addon release ZIP verified")
 PY
 
-sha256sum "dist/$ZIP_NAME" > "dist/$ZIP_NAME.sha256"
+(cd dist && sha256sum "$ZIP_NAME" > "$ZIP_NAME.sha256")
 echo "READY: dist/$ZIP_NAME"
