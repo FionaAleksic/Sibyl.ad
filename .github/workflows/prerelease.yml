@@ -57,5 +57,4 @@ jobs:
             --target "$SHA" \
             --title "Sibyl.ad $version – Read-only LDAPS Connector" \
             --notes-file RELEASE_NOTES.md \
-            --prerelease \
-            --verify-tag
+            --prerelease
