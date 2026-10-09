@@ -115,12 +115,18 @@ final class AdLdapClient implements AutoCloseable {
                 entries.close();
             }
             cookie = null;
-            for (Control c : context.getResponseControls()) {
-                if (c instanceof PagedResultsResponseControl page) {
-                    cookie = page.getCookie();
+            Control[] responseControls = context.getResponseControls();
+            boolean paginationAcknowledged = false;
+            if (responseControls != null) {
+                for (Control c : responseControls) {
+                    if (c instanceof PagedResultsResponseControl page) {
+                        paginationAcknowledged = true;
+                        cookie = page.getCookie();
+                    }
                 }
             }
-            // If the server does not support paging, CRITICAL should abort the request.
+            if (!paginationAcknowledged)
+                throw new IOException("Server did not acknowledge critical LDAP paging control");
         } while (cookie != null && cookie.length > 0);
         return List.copyOf(result);
     }
