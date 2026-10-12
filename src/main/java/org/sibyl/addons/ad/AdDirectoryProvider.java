@@ -8,7 +8,7 @@ import java.util.List;
  */
 public final class AdDirectoryProvider {
     public static final String MODULE_ID = "Sibyl.ad";
-    public static final String VERSION = "0.1.0-rc.3";
+    public static final String VERSION = "0.1.0-rc.4";
 
     public record User(String externalId, String distinguishedName,
                        String accountName, String userPrincipalName,

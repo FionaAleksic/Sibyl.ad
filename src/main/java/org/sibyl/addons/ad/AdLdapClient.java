@@ -89,7 +89,7 @@ final class AdLdapClient implements AutoCloseable {
         return collect("(&(objectCategory=group)(objectClass=group))", GROUP_ATTRS,
             (dn, attributes) -> new AdDirectoryProvider.Group(
                 guid(attributes), dn, str(attributes, "cn"),
-                members(attributes)
+                members(dn, attributes)
             ));
     }
 
@@ -177,33 +177,58 @@ final class AdLdapClient implements AutoCloseable {
         }
     }
 
-    private static List<String> members(Attributes attributes) throws NamingException {
-        // AD returns ranged member attributes for big groups. Failing closed
-        // prevents silent partial synchronization until range retrieval ships.
-        NamingEnumeration<? extends Attribute> all = attributes.getAll();
-        try {
-            while (all.hasMore()) {
-                String key = all.next().getID().toLowerCase(Locale.ROOT);
-                if (key.startsWith("member;range="))
-                    throw new NamingException("AD ranged group memberships require a later connector version");
+    /**
+     * Full member retrieval, including AD range attributes (groups >1500).
+     * Resolves server-returned ranges with bounded, explicit requests.
+     */
+    private List<String> members(String dn, Attributes attributes) throws NamingException {
+        List<String> values=new ArrayList<>();
+        int offset=0;
+        Attributes page=attributes;
+        java.util.Set<String> collected=new java.util.LinkedHashSet<>();
+        for(int round=0; round<100; round++){
+            String returnedRange=null;
+            Attribute normal=page.get("member");
+            if(normal!=null){
+                NamingEnumeration<?> entries=normal.getAll();
+                try{while(entries.hasMore()){if(!collected.add(entries.next().toString()))continue;
+                    if(collected.size()>MAX_ENTRIES)throw new NamingException("Group too large");}}
+                finally{entries.close();}
+                break;
             }
-        } finally {
-            all.close();
-        }
-        Attribute groupMembers = attributes.get("member");
-        List<String> values = new ArrayList<>();
-        if (groupMembers != null) {
-            NamingEnumeration<?> enumeration = groupMembers.getAll();
-            try {
-                while (enumeration.hasMore()) {
-                    if (values.size() >= MAX_ENTRIES)
-                        throw new NamingException("Group member list exceeded safety limit");
-                    values.add(enumeration.next().toString());
+            NamingEnumeration<? extends Attribute> names=page.getAll();
+            Attribute found=null;
+            try{
+                while(names.hasMore()){
+                    Attribute a=names.next();
+                    if(a.getID().toLowerCase(Locale.ROOT).startsWith("member;range=")){
+                        returnedRange=a.getID().toLowerCase(Locale.ROOT);
+                        found=a;break;
+                    }
                 }
-            } finally {
-                enumeration.close();
-            }
+            }finally{names.close();}
+            if(found==null)break;
+            String range=returnedRange.substring("member;range=".length());
+            String[] bounds=range.split("-", -1);
+            if(bounds.length!=2)throw new NamingException("Invalid AD member range");
+            int lower,upper;
+            try{
+                lower=Integer.parseInt(bounds[0]);
+                upper="*".equals(bounds[1])?-1:Integer.parseInt(bounds[1]);
+            }catch(NumberFormatException ex){throw new NamingException("Malformed AD member range");}
+            if(lower!=offset || (upper!=-1 && upper<lower))
+                throw new NamingException("Unexpected AD group membership range");
+            NamingEnumeration<?> entries=found.getAll();
+            try{while(entries.hasMore()){
+                collected.add(entries.next().toString());
+                if(collected.size()>MAX_ENTRIES)throw new NamingException("Group too large");
+            }}finally{entries.close();}
+            if(upper==-1)break;
+            offset=upper+1;
+            page=context.getAttributes(dn,new String[]{"member;range="+offset+"-"+(offset+1499)});
+            if(round==99)throw new NamingException("AD group paging limit reached");
         }
+        values.addAll(collected);
         return List.copyOf(values);
     }
 
