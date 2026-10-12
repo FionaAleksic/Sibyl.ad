@@ -1,6 +1,6 @@
 package org.sibyl.addons.ad;
 public final class AdConnectorMainTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try{
             AdConnectorMain.main(new String[]{});
             throw new AssertionError("Missing operation should fail");
