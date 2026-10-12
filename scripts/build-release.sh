@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
-VERSION="0.1.0-rc.1"
+VERSION="0.1.0-rc.2"
 JAR_NAME="sibyl-ad-$VERSION.jar"
 ZIP_NAME="Sibyl.ad-v$VERSION.zip"
 
@@ -28,14 +28,14 @@ cp "dist/$JAR_NAME" build/stage/
 # Fail build if the package does not follow the stable, versioned add-on format.
 python3 - <<'PY'
 import hashlib, json, pathlib, zipfile
-path=pathlib.Path("dist/Sibyl.ad-v0.1.0-rc.1.zip")
+path=pathlib.Path("dist/Sibyl.ad-v0.1.0-rc.2.zip")
 with zipfile.ZipFile(path) as z:
     names=set(z.namelist())
     assert {"module.json","config.schema.json","SHA256SUMS.txt",
-            "sibyl-ad-0.1.0-rc.1.jar","LICENSE","README.md"}.issubset(names)
+            "sibyl-ad-0.1.0-rc.2.jar","LICENSE","README.md"}.issubset(names)
     metadata=json.loads(z.read("module.json"))
     assert metadata["id"]=="Sibyl.ad"
-    assert metadata["version"]=="0.1.0-rc.1"
+    assert metadata["version"]=="0.1.0-rc.2"
     assert metadata["type"]=="dependency"
     assert metadata["runtime"]=="java21-jar"
     assert metadata["configurationSchema"]=="config.schema.json"

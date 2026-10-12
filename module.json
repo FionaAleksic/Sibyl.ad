@@ -1,20 +1,22 @@
 {
   "schemaVersion": 1,
   "id": "Sibyl.ad",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "name": "Active Directory Integration",
-  "description": "Optionaler LDAPS-Verzeichnisprovider für Sibyl System. Read-only; keine AD-Schreiboperationen.",
+  "description": "Read-only LDAPS-Provider für Nutzer, Gruppen und Computer über zentralen AD-Serviceaccount.",
   "type": "dependency",
   "runtime": "java21-jar",
   "entrypoint": "org.sibyl.addons.ad.AdDirectoryProvider",
   "apiCompatibility": ">=0.1.0 <1.0.0",
   "capabilities": [
     "identity.directory.users.read",
-    "identity.directory.groups.read"
+    "identity.directory.groups.read",
+    "inventory.directory.computers.read"
   ],
   "permissions": [
     "identity.external-users.read",
-    "identity.external-groups.read"
+    "identity.external-groups.read",
+    "inventory.external-computers.read"
   ],
   "requires": [
     {

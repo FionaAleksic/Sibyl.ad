@@ -60,7 +60,7 @@ public final class AdConnectorTests {
         rejects(() -> AdEncoding.objectGuid(new byte[3]), "Wrong GUID length forbidden");
 
         ok("Sibyl.ad".equals(AdDirectoryProvider.MODULE_ID), "Stable addon id");
-        ok("0.1.0-rc.1".equals(AdDirectoryProvider.VERSION), "Release version");
+        ok("0.1.0-rc.2".equals(AdDirectoryProvider.VERSION), "Release version");
         AdDirectoryProvider.User user = new AdDirectoryProvider.User(
             "guid", "CN=Person,DC=example,DC=org", "account", "person@example.org", "Person", "person@example.org", true
         );
@@ -69,6 +69,16 @@ public final class AdConnectorTests {
             "group-id", "CN=Group,DC=example,DC=org", "Group", java.util.List.of("CN=Person,DC=example,DC=org")
         );
         ok(group.memberDistinguishedNames().size() == 1, "Group membership snapshot");
+
+        AdDirectoryProvider.Computer computer = new AdDirectoryProvider.Computer(
+            "computer-id", "CN=NL14313,DC=example,DC=org",
+            "NL14313", "nl14313.example.org", "Windows 11");
+        ok("NL14313".equals(computer.name()) && computer.externalId().equals("computer-id"),
+            "Read-only computer record");
+
+        AdDirectoryProvider.Snapshot snapshot = new AdDirectoryProvider.Snapshot(
+            java.util.List.of(user),java.util.List.of(group),java.util.List.of(computer));
+        ok(snapshot.computers().size()==1, "Computer snapshot is available to Inventory");
 
         System.out.println("All " + checks + " AD connector checks passed.");
     }

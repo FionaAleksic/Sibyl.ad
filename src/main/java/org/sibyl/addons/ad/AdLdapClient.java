@@ -33,6 +33,9 @@ final class AdLdapClient implements AutoCloseable {
     private static final String[] GROUP_ATTRS = {
         "objectGUID", "cn", "member"
     };
+    private static final String[] COMPUTER_ATTRS = {
+        "objectGUID", "name", "dNSHostName", "operatingSystem"
+    };
     private final LdapContext context;
     private final AdSettings settings;
 
@@ -88,6 +91,23 @@ final class AdLdapClient implements AutoCloseable {
                 guid(attributes), dn, str(attributes, "cn"),
                 members(attributes)
             ));
+    }
+
+    List<AdDirectoryProvider.Computer> readComputers() throws Exception {
+        return collect("(&(objectCategory=computer)(objectClass=computer))",
+            COMPUTER_ATTRS, (dn, a) -> new AdDirectoryProvider.Computer(
+                guid(a), dn, str(a, "name"), str(a, "dNSHostName"),
+                str(a, "operatingSystem")));
+    }
+
+    List<AdDirectoryProvider.Computer> findComputersByName(String name) throws Exception {
+        if (name == null || name.isBlank() || name.length() > 256)
+            throw new IllegalArgumentException("Invalid computer name");
+        String escaped = AdEncoding.escapeFilter(name);
+        return collect("(&(objectCategory=computer)(objectClass=computer)(name="
+            + escaped + "))", COMPUTER_ATTRS, (dn, a) -> new AdDirectoryProvider.Computer(
+                guid(a), dn, str(a, "name"), str(a, "dNSHostName"),
+                str(a, "operatingSystem")));
     }
 
     @FunctionalInterface

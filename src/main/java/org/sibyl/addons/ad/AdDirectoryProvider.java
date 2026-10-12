@@ -8,7 +8,7 @@ import java.util.List;
  */
 public final class AdDirectoryProvider {
     public static final String MODULE_ID = "Sibyl.ad";
-    public static final String VERSION = "0.1.0-rc.1";
+    public static final String VERSION = "0.1.0-rc.2";
 
     public record User(String externalId, String distinguishedName,
                        String accountName, String userPrincipalName,
@@ -21,10 +21,15 @@ public final class AdDirectoryProvider {
         }
     }
 
-    public record Snapshot(List<User> users, List<Group> groups) {
+    /** Immutable computer data to be consumed by the Inventory adapter. */
+    public record Computer(String externalId, String distinguishedName, String name,
+                           String dnsHostName, String operatingSystem) {}
+
+    public record Snapshot(List<User> users, List<Group> groups, List<Computer> computers) {
         public Snapshot {
             users = List.copyOf(users);
             groups = List.copyOf(groups);
+            computers = List.copyOf(computers);
         }
     }
 
@@ -41,7 +46,14 @@ public final class AdDirectoryProvider {
      */
     public Snapshot readSnapshot() throws Exception {
         try (AdLdapClient client = AdLdapClient.open(settings)) {
-            return new Snapshot(client.readUsers(), client.readGroups());
+            return new Snapshot(client.readUsers(), client.readGroups(), client.readComputers());
+        }
+    }
+
+    /** Safe read-only computer lookup for inventory consumers. */
+    public List<Computer> findComputerByName(String name) throws Exception {
+        try (AdLdapClient client = AdLdapClient.open(settings)) {
+            return client.findComputersByName(name);
         }
     }
 

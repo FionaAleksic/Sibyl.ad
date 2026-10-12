@@ -1,11 +1,11 @@
 # Sibyl.ad
 
 **Addon-ID:** `Sibyl.ad`  
-**Pre-Release:** `v0.1.0-rc.1` · Java 21 · Read-only
+**Pre-Release:** `v0.1.0-rc.2` · Java 21 · Read-only
 
 Optionale **Active-Directory-Integration** für die firmenneutrale Plattform Sibyl System. Sibyl hat seine **eigene zentrale Datenbank und stabile Benutzer-UUIDs**; AD ist ein austauschbarer, externer Verzeichnisprovider, nicht die globale Source of Truth.
 
-## Funktionen in v0.1.0-rc.1
+## Funktionen in v0.1.0-rc.2
 
 - Authentifizierte **LDAPS**-Verbindung mit geprüftem TLS-Zertifikat und DNS-Hostnamen.
 - Benutzer aus AD lesen: `objectGUID`, `sAMAccountName`, `userPrincipalName`, `displayName`, `mail`, Konto-aktiv-Status.
@@ -16,12 +16,12 @@ Optionale **Active-Directory-Integration** für die firmenneutrale Plattform Sib
 
 ## Installationspaket
 
-Ein echtes GitHub **Pre-Release** enthält das Asset `Sibyl.ad-v0.1.0-rc.1.zip`, sowie `Sibyl.ad-v0.1.0-rc.1.zip.sha256`. Im ZIP:
+Ein echtes GitHub **Pre-Release** enthält das Asset `Sibyl.ad-v0.1.0-rc.2.zip`, sowie `Sibyl.ad-v0.1.0-rc.2.zip.sha256`. Im ZIP:
 
 ```text
 module.json
 config.schema.json
-sibyl-ad-0.1.0-rc.1.jar
+sibyl-ad-0.1.0-rc.2.jar
 SHA256SUMS.txt
 README.md
 LICENSE
@@ -63,7 +63,7 @@ Der Build kompiliert und führt deterministische Tests zu LDAPS-Zwang, Konfigura
 
 ## GitHub-Release-Prozess
 
-- Entwicklungsbranch `test` → unveränderliches **Pre-Release** `v0.1.0-rc.1`.
+- Entwicklungsbranch `test` → unveränderliches **Pre-Release** `v0.1.0-rc.2`.
 - `main` bleibt stabil; nicht ohne Freigabe zusammenführen.
 - GitHub Actions `.github/workflows/prerelease.yml` baut/testet bei Änderungen im `test`-Branch und veröffentlicht **nur bei Erfolg**; bestehende Tags werden nicht überschrieben.
 - Installationsquelle ist **ausschließlich** das veröffentlichte Release-Asset, nicht ein Branch-ZIP oder `git clone`.
@@ -81,4 +81,4 @@ Der Build kompiliert und führt deterministische Tests zu LDAPS-Zwang, Konfigura
 
 ## Öffentliche Bereitstellung
 
-Das Repository ist öffentlich. Sobald ein **veröffentlichtes** GitHub-Pre-Release `v0.1.0-rc.1` mit ZIP-Asset existiert, können fremde Sibyl-Server dessen Paket ohne persönliche GitHub-Anmeldung direkt aus der GitHub-Releases-API beziehen. Der aktuelle `test`-Branch ist **kein** installierbares Release. Die Veröffentlichung wird nach erfolgreichem Build und erfolgreichen Tests durch die CI durchgeführt.
+Das Repository ist öffentlich. Sobald ein **veröffentlichtes** GitHub-Pre-Release `v0.1.0-rc.2` mit ZIP-Asset existiert, können fremde Sibyl-Server dessen Paket ohne persönliche GitHub-Anmeldung direkt aus der GitHub-Releases-API beziehen. Der aktuelle `test`-Branch ist **kein** installierbares Release. Die Veröffentlichung wird nach erfolgreichem Build und erfolgreichen Tests durch die CI durchgeführt.

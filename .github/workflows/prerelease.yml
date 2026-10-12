@@ -33,11 +33,11 @@ jobs:
           import json, pathlib
           meta=json.loads(pathlib.Path("module.json").read_text())
           assert meta["id"]=="Sibyl.ad"
-          assert meta["version"]=="0.1.0-rc.1"
-          assert pathlib.Path("dist/Sibyl.ad-v0.1.0-rc.1.zip").is_file()
+          assert meta["version"]=="0.1.0-rc.2"
+          assert pathlib.Path("dist/Sibyl.ad-v0.1.0-rc.2.zip").is_file()
           print("Version matches prerelease manifest")
           PY
-          (cd dist && sha256sum -c Sibyl.ad-v0.1.0-rc.1.zip.sha256)
+          (cd dist && sha256sum -c Sibyl.ad-v0.1.0-rc.2.zip.sha256)
       - name: Publish one immutable prerelease
         env:
           GH_TOKEN: ${{ github.token }}
@@ -45,14 +45,14 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          version="v0.1.0-rc.1"
+          version="v0.1.0-rc.2"
           if gh release view "$version" --repo "$REPOSITORY" >/dev/null 2>&1; then
             echo "Prerelease $version already exists; refusing overwrite"
             exit 0
           fi
           gh release create "$version" \
-            "dist/Sibyl.ad-v0.1.0-rc.1.zip" \
-            "dist/Sibyl.ad-v0.1.0-rc.1.zip.sha256" \
+            "dist/Sibyl.ad-v0.1.0-rc.2.zip" \
+            "dist/Sibyl.ad-v0.1.0-rc.2.zip.sha256" \
             --repo "$REPOSITORY" \
             --target "$SHA" \
             --title "Sibyl.ad $version – Read-only LDAPS Connector" \
