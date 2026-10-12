@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
-VERSION="0.1.0-rc.2"
+VERSION="0.1.0-rc.3"
 JAR_NAME="sibyl-ad-$VERSION.jar"
 ZIP_NAME="Sibyl.ad-v$VERSION.zip"
 
@@ -20,22 +20,22 @@ find src/test/java -type f -name '*.java' -print0 | xargs -0 javac --release 21 
 java -ea -cp build/main:build/test org.sibyl.addons.ad.AdConnectorTests
 
 jar --create --file "dist/$JAR_NAME" -C build/main .
-cp module.json config.schema.json LICENSE README.md build/stage/
+cp module.json deployment.json config.schema.json LICENSE README.md build/stage/
 cp "dist/$JAR_NAME" build/stage/
-(cd build/stage && sha256sum module.json config.schema.json "$JAR_NAME" > SHA256SUMS.txt)
+(cd build/stage && sha256sum module.json deployment.json config.schema.json "$JAR_NAME" > SHA256SUMS.txt)
 (cd build/stage && zip -q -X -r "../../dist/$ZIP_NAME" .)
 
 # Fail build if the package does not follow the stable, versioned add-on format.
 python3 - <<'PY'
 import hashlib, json, pathlib, zipfile
-path=pathlib.Path("dist/Sibyl.ad-v0.1.0-rc.2.zip")
+path=pathlib.Path("dist/Sibyl.ad-v0.1.0-rc.3.zip")
 with zipfile.ZipFile(path) as z:
     names=set(z.namelist())
-    assert {"module.json","config.schema.json","SHA256SUMS.txt",
-            "sibyl-ad-0.1.0-rc.2.jar","LICENSE","README.md"}.issubset(names)
+    assert {"module.json","deployment.json","config.schema.json","SHA256SUMS.txt",
+            "sibyl-ad-0.1.0-rc.3.jar","LICENSE","README.md"}.issubset(names)
     metadata=json.loads(z.read("module.json"))
     assert metadata["id"]=="Sibyl.ad"
-    assert metadata["version"]=="0.1.0-rc.2"
+    assert metadata["version"]=="0.1.0-rc.3"
     assert metadata["type"]=="dependency"
     assert metadata["runtime"]=="java21-jar"
     assert metadata["configurationSchema"]=="config.schema.json"

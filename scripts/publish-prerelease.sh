@@ -4,7 +4,7 @@ set -euo pipefail
 # Manual publishing fallback if GitHub Actions runners are unavailable.
 # Run from a clone of the private Sibyl.ad repo with a GitHub-authenticated gh CLI.
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-version="v0.1.0-rc.2"
+version="v0.1.0-rc.3"
 asset="dist/Sibyl.ad-$version.zip"
 checksum="$asset.sha256"
 

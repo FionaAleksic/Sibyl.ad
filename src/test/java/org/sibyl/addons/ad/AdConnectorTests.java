@@ -60,7 +60,7 @@ public final class AdConnectorTests {
         rejects(() -> AdEncoding.objectGuid(new byte[3]), "Wrong GUID length forbidden");
 
         ok("Sibyl.ad".equals(AdDirectoryProvider.MODULE_ID), "Stable addon id");
-        ok("0.1.0-rc.2".equals(AdDirectoryProvider.VERSION), "Release version");
+        ok("0.1.0-rc.3".equals(AdDirectoryProvider.VERSION), "Release version");
         AdDirectoryProvider.User user = new AdDirectoryProvider.User(
             "guid", "CN=Person,DC=example,DC=org", "account", "person@example.org", "Person", "person@example.org", true
         );

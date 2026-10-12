@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "id": "Sibyl.ad",
+  "version": "0.1.0-rc.3",
+  "kind": "dependency",
+  "dependencies": [],
+  "operations": []
+}
