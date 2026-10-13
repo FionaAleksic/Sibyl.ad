@@ -8,47 +8,64 @@
     "serverUrl": {
       "type": "string",
       "pattern": "^ldaps://[^/?#]+(?::[0-9]+)?$",
-      "description": "DNS name + optional port; a trusted TLS certificate is required."
+      "description": "DNS name + optional port; a trusted TLS certificate is required.",
+      "title": "LDAPS-Server",
+      "examples": [
+        "ldaps://dc.example.org:636"
+      ]
     },
     "baseDn": {
       "type": "string",
       "minLength": 3,
       "maxLength": 1024,
-      "description": "OU/domain subtree to be queried, for example DC=example,DC=org."
+      "description": "OU/domain subtree to be queried, for example DC=example,DC=org.",
+      "title": "Suchbasis",
+      "examples": [
+        "DC=example,DC=org"
+      ]
     },
     "bindDn": {
       "type": "string",
       "minLength": 3,
       "maxLength": 1024,
-      "description": "Read-only AD service account LDAP distinguished name."
+      "description": "Read-only AD service account LDAP distinguished name.",
+      "title": "Servicekonto (Bind-DN)",
+      "examples": [
+        "CN=svc-sibyl,OU=Service,DC=example,DC=org"
+      ]
     },
     "credentialEnvironmentVariable": {
       "type": "string",
       "const": "SIBYL_AD_BIND_PASSWORD",
-      "default": "SIBYL_AD_BIND_PASSWORD"
+      "default": "SIBYL_AD_BIND_PASSWORD",
+      "title": "Geheime Variable"
     },
     "pageSize": {
       "type": "integer",
       "minimum": 10,
       "maximum": 1000,
-      "default": 250
+      "default": 250,
+      "title": "Objekte je Abfrage"
     },
     "connectTimeoutMs": {
       "type": "integer",
       "minimum": 1000,
       "maximum": 30000,
-      "default": 5000
+      "default": 5000,
+      "title": "Verbindungszeit (ms)"
     },
     "readTimeoutMs": {
       "type": "integer",
       "minimum": 1000,
       "maximum": 60000,
-      "default": 10000
+      "default": 10000,
+      "title": "Antwortzeit (ms)"
     },
     "enableWrites": {
       "type": "boolean",
       "const": false,
-      "default": false
+      "default": false,
+      "title": "AD-Schreibzugriff (deaktiviert)"
     }
   },
   "required": [
