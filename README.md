@@ -1,5 +1,7 @@
 # Sibyl.ad
 
+> **Release-Stand (13.10.2026):** neueste veröffentlichte Vorabversion `v0.1.0-rc.4` · [Core-Kompatibilität und Addon-Browser](docs/CORE-COMPATIBILITY.md). Die Anzeige im Browser installiert keine Addons. Ältere Versionsbeispiele im folgenden Text bleiben als historische Dokumentation erhalten.
+
 **Addon-ID:** `Sibyl.ad`  
 **Pre-Release:** `v0.1.0-rc.3` · Java 21 · Read-only
 
